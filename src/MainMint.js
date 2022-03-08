@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { ethers, BigNumber } from 'ethers';
+import { Box, Button, Flex, Input, Text } from '@chakra-ui/react';
+
 import ProxyPunksNFT from './ProxyPunksNFT.json';
 
 const ProxyPunksNFTAddress = '0x8d4558B1b15FC63B5B24151C0B4Eda5377767585';
@@ -18,7 +20,9 @@ const MainMint = ({ accounts, setAccounts }) => {
         signer
       );
       try {
-        const response = await contract.mint(BigNumber.from(mintAmount));
+        const response = await contract.mint(BigNumber.from(mintAmount), {
+          value: ethers.utils.parseEther((0.02 * mintAmount).toString()),
+        });
         console.log('response: ', response);
       } catch (err) {
         console.log('error: ', err);
@@ -37,22 +41,90 @@ const MainMint = ({ accounts, setAccounts }) => {
   };
 
   return (
-    <div>
-      <h1>ProxyPunks</h1>
-      <p>~ They have finally arrived! Mint one today! ~</p>
-      {isConnected ? (
+    <Flex justify='center' align='center' height='100vh' paddingBottom='150px'>
+      <Box width='520px'>
         <div>
-          <div>
-            <button onClick={handleDecrement}></button>
-            <input type='number' value={mintAmount} />
-            <button onClick={handleIncrement}></button>
-          </div>
-          <button onClick={handleMint}>Mint Now</button>
+          <Text fontSize='48px' textShadow='0 5px #000000'>
+            ProxyPunks
+          </Text>
+          <Text
+            fontSize='30px'
+            letterSpacing='-5.5%'
+            fontFamily='VT323'
+            textShadow='0 2px 2px #000000'
+          >
+            They have finally arrived! Mint one today!
+          </Text>
         </div>
-      ) : (
-        <p>You must be connected to mint.</p>
-      )}
-    </div>
+        {isConnected ? (
+          <div>
+            <Flex align='center' justify='center'>
+              <Button
+                backgroundColor='#D6517D'
+                borderRadius='5px'
+                boxShadow='0px 2px 2px 1px #0F0F0F'
+                color='white'
+                cursor='pointer'
+                fontFamily='inherit'
+                padding='15px'
+                marginTop='10px'
+                onClick={handleDecrement}
+              >
+                -
+              </Button>
+              <Input
+                readOnly
+                fontFamily='inherit'
+                width='100px'
+                height='40px'
+                textAlign='center'
+                paddingLeft='19px'
+                marginTop='10px'
+                type='number'
+                value={mintAmount}
+              />
+              <Button
+                backgroundColor='#D6517D'
+                borderRadius='5px'
+                boxShadow='0px 2px 2px 1px #0F0F0F'
+                color='white'
+                cursor='pointer'
+                fontFamily='inherit'
+                padding='15px'
+                marginTop='10px'
+                onClick={handleIncrement}
+              >
+                +
+              </Button>
+            </Flex>
+            <Button
+              backgroundColor='#D6517D'
+              borderRadius='5px'
+              boxShadow='0px 2px 2px 1px #0F0F0F'
+              color='white'
+              cursor='pointer'
+              fontFamily='inherit'
+              padding='15px'
+              marginTop='10px'
+              onClick={handleMint}
+            >
+              Mint Now
+            </Button>
+          </div>
+        ) : (
+          <Text
+            marginTop='70px'
+            fontSize='30px'
+            letterSpacing='-5.5%'
+            fontFamily='VT323'
+            textShadow='0 3px #000000'
+            color='#D6517D'
+          >
+            You must be connected to mint.
+          </Text>
+        )}
+      </Box>
+    </Flex>
   );
 };
 
